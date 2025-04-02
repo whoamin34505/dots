@@ -85,10 +85,31 @@ public:
     void setP4Z(int newZ) { p4.setZ(newZ); updateArea(); }
 
     double getArea() const { return area; }
-    void updateArea()  {
-        double a = sqrt(pow(getpX() - getX(), 2) + pow(getpY() - getY(), 2) + pow(getpZ() - getZ(), 2));
-        double b = sqrt(pow(p3.getX() - getX(), 2) + pow(p3.getY() - getY(), 2) + pow(p3.getZ() - getZ(), 2));
-        area = a*b;
+    void updateArea() {
+        // Координаты всех точек прямоугольника
+        int Ax = getX(), Ay = getY(), Az = getZ();
+        int Bx = getpX(), By = getpY(), Bz = getpZ();
+        int Cx = p3.getX(), Cy = p3.getY(), Cz = p3.getZ();
+        int Dx = p4.getX(), Dy = p4.getY(), Dz = p4.getZ();
+    
+        // Векторы AB и BC (стороны прямоугольника)
+        int ABx = Bx - Ax, ABy = By - Ay;
+        int BCx = Cx - Bx, BCy = Cy - By;
+    
+        // Проверка условий:
+        // 1. Все точки в одной плоскости (Z одинаковы)
+        bool isFlat = (Az == Bz) && (Bz == Cz) && (Cz == Dz);
+        
+        // 2. Стороны AB и BC перпендикулярны (скалярное произведение = 0)
+        bool isPerpendicular = (ABx * BCx + ABy * BCy) == 0;
+    
+        if (isFlat && isPerpendicular) {
+            double lengthAB = sqrt(ABx*ABx + ABy*ABy);
+            double lengthBC = sqrt(BCx*BCx + BCy*BCy);
+            area = lengthAB * lengthBC;
+        } else {
+            area = -1; // криво
+        }
     }
 
 
@@ -98,9 +119,12 @@ class Parallelepiped: public Rectangle {
 
 };
 
-int main()
-{
-    Line line1(1,2,3,4,5,6);
-    line1.printL();
+int main() {
+    Rectangle rect1(0,0,0, 2,0,0, 3,3,0, 1,3,0);
+    cout << "Area 1: " << rect1.getArea() << endl;  
+
+    Rectangle rect2(1,1,1, 4,1,1, 4,5,1, 1,5,1);
+    cout << "Area 5: " << rect2.getArea() << endl; 
+
     return 0;
 }
