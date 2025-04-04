@@ -6,7 +6,7 @@ using namespace std;
 
 class Point {
 protected:
-    int x, y, z;
+    int x, y, z; 
 
 public:
     Point() : x(0), y(0), z(0) {}
@@ -158,26 +158,37 @@ public:
 
     double getVolume() const { return volume; }
     void updateVolume() {
+        // Получение координат всех 8 вершин. ABCD - вершины нижнего основания, EFGH - верхнего основания
         int Ax = getX(), Ay = getY(), Az = getZ();
         int Bx = getpX(), By = getpY(), Bz = getpZ();
-        int Cx = p3.getX(), Cy = p3.getY(), Cz = p3.getZ();
-        int Dx = p4.getX(), Dy = p4.getY(), Dz = p4.getZ();
+        int Cx = getP3X(), Cy = getP3Y(), Cz = getP3Z();
+        int Dx = getP4X(), Dy = getP4Y(), Dz = getP4Z();
         int Ex = p5.getX(), Ey = p5.getY(), Ez = p5.getZ();
         int Fx = p6.getX(), Fy = p6.getY(), Fz = p6.getZ();
         int Gx = p7.getX(), Gy = p7.getY(), Gz = p7.getZ();
         int Hx = p8.getX(), Hy = p8.getY(), Hz = p8.getZ();
 
+        // Точке A соответствует точка E, точке B - F, точке C - G, точке D - H
         Rectangle base1(Ax, Ay, Az, Bx, By, Bz, Cx, Cy, Cz, Dx, Dy, Dz);
         Rectangle base2(Ex, Ey, Ez, Fx, Fy, Fz, Gx, Gy, Gz, Hx, Hy, Hz);
-        if ((base1.getArea() == -1) || (base2.getArea() == -1)) {
-            volume = -1; 
-            return; 
+    
+        if (base1.getArea() <= 0 || base2.getArea() <= 0) {
+            volume = -1;
+            return;
         }
-        if (Ax==Ex && Bx==Fx && Cx==Gx && Dx==Hx){
-
-            volume = base1.getArea() * sqrt((Ey - Ay)*(Ey - Ay));
+    
+        int AEx = Ex - Ax, AEy = Ey - Ay, AEz = Ez - Az; // AE - вектор, показывающий как смещается точка A в точку E
+        
+        // Проверяется, что верхнее основание (EFGH) является точной параллельной копией нижнего основания (ABCD), смещённой на вектор AE = (AEx, AEy, AEz)
+        if ((Fx - Bx) != AEx || (Fy - By) != AEy || (Fz - Bz) != AEz ||
+            (Gx - Cx) != AEx || (Gy - Cy) != AEy || (Gz - Cz) != AEz ||
+            (Hx - Dx) != AEx || (Hy - Dy) != AEy || (Hz - Dz) != AEz) {
+            volume = -1;
+            return;
         }
-
+        
+        double height = sqrt(AEx*AEx + AEy*AEy + AEz*AEz);
+        volume = base1.getArea() * height;
     }
 
     void printParallelepiped() const {
@@ -195,11 +206,20 @@ public:
 };
 
 int main() {
-    Rectangle rect(1,1,1, 4,1,1, 4,5,1, 1,5,1);
-    cout << "Area: " << rect.getArea() << endl; 
+    // Создаем прямоугольный параллелепипед 3x4x5
+    Parallelepiped par(
+        0, 0, 0,  // A (нижнее основание)
+        3, 0, 0,  // B
+        3, 4, 0,  // C
+        0, 4, 0,  // D
+        0, 0, 5,  // E (верхнее основание)
+        3, 0, 5,  // F
+        3, 4, 5,  // G
+        0, 4, 5   // H
+    );
 
-    Parallelepiped par(1,1,1, 4,1,1, 4,5,1, 1,5,1, 1,5,5, 4,5,5, 4,5,5, 1,5,5);
-    cout << "Volume: " << par.getVolume() << endl;
+    cout << "Volume: " << par.getVolume() << endl; // Должно быть 60 (3*4*5)
     par.printParallelepiped();
+
     return 0;
 }
