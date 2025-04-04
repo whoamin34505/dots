@@ -60,7 +60,7 @@ public:
 };
 
 class Rectangle: public Line {
-private:
+protected:
     Point p3, p4;
     double area;
 public:
@@ -116,15 +116,83 @@ public:
 };
 
 class Parallelepiped: public Rectangle {
+private:
+    Point p5, p6, p7, p8;
+    double volume;
+public:
+    Parallelepiped(): Rectangle(), p5(0,0,0), p6(0,0,0), p7(0,0,0), p8(0,0,0), volume(0) {}
+    Parallelepiped(int x1, int y1, int z1, int x2, int y2, int z2, int x3, int y3, int z3, int x4, int y4, int z4, int x5, int y5, int z5, int x6, int y6, int z6, int x7, int y7, int z7, int x8, int y8, int z8): Rectangle(x1,y1,z1,x2,y2,z2,x3,y3,z3,x4,y4,z4), p5(x5,y5,z5), p6(x6,y6,z6), p7(x7,y7,z7), p8(x8,y8,z8) { updateVolume(); }
 
+    int getP5X() const { return p5.getX(); }
+    int getP5Y() const { return p5.getY(); }
+    int getP5Z() const { return p5.getZ(); }
+
+    int getP6X() const { return p6.getX(); }
+    int getP6Y() const { return p6.getY(); }
+    int getP6Z() const { return p6.getZ(); }
+
+    int getP7X() const { return p7.getX(); }
+    int getP7Y() const { return p7.getY(); }
+    int getP7Z() const { return p7.getZ(); }
+
+    int getP8X() const { return p8.getX(); }
+    int getP8Y() const { return p8.getY(); }
+    int getP8Z() const { return p8.getZ(); }
+
+    void setP5X(int newX) { p5.setX(newX); updateVolume(); }
+    void setP5Y(int newY) { p5.setY(newY); updateVolume(); }
+    void setP5Z(int newZ) { p5.setZ(newZ); updateVolume(); }
+
+    void setP6X(int newX) { p6.setX(newX); updateVolume(); }
+    void setP6Y(int newY) { p6.setY(newY); updateVolume(); }
+    void setP6Z(int newZ) { p6.setZ(newZ); updateVolume(); }
+
+    void setP7X(int newX) { p7.setX(newX); updateVolume(); }
+    void setP7Y(int newY) { p7.setY(newY); updateVolume(); }
+    void setP7Z(int newZ) { p7.setZ(newZ); updateVolume(); }
+
+    void setP8X(int newX) { p8.setX(newX); updateVolume(); }
+    void setP8Y(int newY) { p8.setY(newY); updateVolume(); }
+    void setP8Z(int newZ) { p8.setZ(newZ); updateVolume(); }
+
+    double getVolume() const { return volume; }
+    void updateVolume() {
+        int Ax = getX(), Ay = getY(), Az = getZ();
+        int Bx = getpX(), By = getpY(), Bz = getpZ();
+        int Cx = p3.getX(), Cy = p3.getY(), Cz = p3.getZ();
+        int Dx = p4.getX(), Dy = p4.getY(), Dz = p4.getZ();
+        int Ex = p5.getX(), Ey = p5.getY(), Ez = p5.getZ();
+        int Fx = p6.getX(), Fy = p6.getY(), Fz = p6.getZ();
+        int Gx = p7.getX(), Gy = p7.getY(), Gz = p7.getZ();
+        int Hx = p8.getX(), Hy = p8.getY(), Hz = p8.getZ();
+
+        Rectangle base1(Ax, Ay, Az, Bx, By, Bz, Cx, Cy, Cz, Dx, Dy, Dz);
+        Rectangle base2(Ex, Ey, Ez, Fx, Fy, Fz, Gx, Gy, Gz, Hx, Hy, Hz);
+        if (base1.getArea()!=-1 && base2.getArea()!=-1){
+            
+        }
+
+    }
+
+    void printParallelepiped() const {
+        cout << "Points of the parallelepiped:" << endl;
+        cout << "P1: " << getX() << ", " << getY() << ", " << getZ() << endl;
+        cout << "P2: " << getpX() << ", " << getpY() << ", " << getpZ() << endl;
+        cout << "P3: " << getP3X() << ", " << getP3Y() << ", " << getP3Z() << endl;
+        cout << "P4: " << getP4X() << ", " << getP4Y() << ", " << getP4Z() << endl;
+        cout << "P5: " << p5.getX() << ", " << p5.getY() << ", " << p5.getZ() << endl;
+        cout << "P6: " << p6.getX() << ", " << p6.getY() << ", " << p6.getZ() << endl;
+        cout << "P7: " << p7.getX() << ", " << p7.getY() << ", " << p7.getZ() << endl;
+        cout << "P8: " << p8.getX() << ", " << p8.getY() << ", " << p8.getZ() << endl;
+        cout << "Volume: " << volume << endl;
+    }
 };
 
 int main() {
-    Rectangle rect1(0,0,0, 2,0,0, 3,3,0, 1,3,0);
-    cout << "Area 1: " << rect1.getArea() << endl;  
+    Rectangle rect(1,1,1, 4,1,1, 4,5,1, 1,5,1);
+    cout << "Area: " << rect.getArea() << endl; 
 
-    Rectangle rect2(1,1,1, 4,1,1, 4,5,1, 1,5,1);
-    cout << "Area 5: " << rect2.getArea() << endl; 
-
+    Parallelepiped par(1,1,1, 4,1,1, 4,5,1, 1,5,1, 1,5,5, 4,5,5, 4,5,5, 1,5,5);
+    cout << "Volume: " << par.getVolume() << endl;
     return 0;
 }
