@@ -95,6 +95,7 @@ public:
         // Векторы AB и BC (стороны прямоугольника)
         int ABx = Bx - Ax, ABy = By - Ay;
         int BCx = Cx - Bx, BCy = Cy - By;
+
     
         // Проверка условий:
         // 1. Все точки в одной плоскости (Z одинаковы)
@@ -168,8 +169,13 @@ public:
 
         Rectangle base1(Ax, Ay, Az, Bx, By, Bz, Cx, Cy, Cz, Dx, Dy, Dz);
         Rectangle base2(Ex, Ey, Ez, Fx, Fy, Fz, Gx, Gy, Gz, Hx, Hy, Hz);
-        if (base1.getArea()!=-1 && base2.getArea()!=-1){
-            
+        if ((base1.getArea() == -1) || (base2.getArea() == -1)) {
+            volume = -1; 
+            return; 
+        }
+        if (Ax==Ex && Bx==Fx && Cx==Gx && Dx==Hx){
+
+            volume = base1.getArea() * sqrt((Ey - Ay)*(Ey - Ay));
         }
 
     }
@@ -194,5 +200,6 @@ int main() {
 
     Parallelepiped par(1,1,1, 4,1,1, 4,5,1, 1,5,1, 1,5,5, 4,5,5, 4,5,5, 1,5,5);
     cout << "Volume: " << par.getVolume() << endl;
+    par.printParallelepiped();
     return 0;
 }
